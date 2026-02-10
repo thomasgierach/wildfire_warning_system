@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
-import { distance_options } from "constats";
+import { distance_options } from "./constants";
 
 const SearchForm = () => {
   const [query, setQuery] = useState({
