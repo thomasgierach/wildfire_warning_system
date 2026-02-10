@@ -1,0 +1,7 @@
+/*
+        Search area must be in format of:
+            west,south,east,north
+        ie.:
+            longitude_low, latitude_low, longitude_high, latitude_high
+        
+    */
