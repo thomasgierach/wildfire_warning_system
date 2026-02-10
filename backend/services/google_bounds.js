@@ -1,8 +1,7 @@
-import { saveBounds, saveBadAddress } from './insert_bounds.js';
+import { saveBounds, saveBadAddress } from '../db/insert_bounds.js';
 import fetch from 'node-fetch';
-import pool from './db.js'
 
-export async function googleBounds(coded_address, apiKey) {
+export async function googleBounds(pool, coded_address, apiKey) {
     console.log("In googleBounds");
     //console.log("coded_address:", coded_address);
     let northeast_lat = "";
@@ -10,13 +9,15 @@ export async function googleBounds(coded_address, apiKey) {
     let southwest_lat = "";
     let southwest_lng = "";
     const apiURL = `https://maps.googleapis.com/maps/api/geocode/json?address=${coded_address}&key=${apiKey}`;
-    console.log(apiURL);
+    //console.log(apiURL);
     try {
         const response = await fetch(apiURL);
         const data = await response.json();
         
         let northeast;
         let southwest;
+        console.log("Google Data");
+        console.log(data);
         if (data.results.length > 0) {
             try {
                 northeast = data.results[0].geometry.bounds.northeast;

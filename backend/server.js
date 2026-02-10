@@ -1,17 +1,11 @@
 import express from 'express';
 import cors from "cors";
 // Import PostgreSQL connection
-import pool from "./db.js"; 
-// Calls postgres db to see if our address already exists
-import { retrieveBounds } from "./retrieve_bounds_qry.js";
-// Calls Google Maps API
-import { googleBounds } from "./google_bounds.js";
-// Calls Nasa Wildfire Satellite API
-import { getNasaData } from "./get_nasa_bounds.js";
+import pool from "./db/db.js"; 
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
-
+import { get_wildfire_data } from './services/get_wildfire_data.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -77,64 +71,21 @@ app.post("/api/save-bounds", async (req, res) => {
 })
 */
 app.get("/api/get-existing-bounds", async (req, res) => {
-  console.log("get-existing-bounds");
-
   try {
-    const coded_address = req.query.coded_address;
-    
-    const checkResult = await retrieveBounds(pool, coded_address, "");
-    console.log(checkResult);
-    let northeast_lat = "";
-    let northeast_lng = "";
-    let southwest_lat = "";
-    let southwest_lng = "";
+    const result = await get_wildfire_data(
+      pool,
+      req.query.coded_address,
+      req.query.distance,
+      process.env.GOOGLE_API_KEY,
+      process.env.NASA_API_KEY
+    );
 
-    if (checkResult.rows.length !== 0) {
-      if (checkResult.rows[0]["northeast_lat"]) {
-        northeast_lat = encodeURI(checkResult.rows[0]["northeast_lat"]);
-        northeast_lng = encodeURI(checkResult.rows[0]["northeast_lng"]);
-        southwest_lat = encodeURI(checkResult.rows[0]["southwest_lat"]);
-        southwest_lng = encodeURI(checkResult.rows[0]["southwest_lng"]);
-      } 
-    } else {
-      console.log("Googling Address to Coordinates");
-      const apiKey = process.env.GOOGLE_API_KEY;
-      
-      let response = await googleBounds(coded_address, apiKey);
-      northeast_lat = encodeURI(response["northeast_lat"]);
-      northeast_lng = encodeURI(response["northeast_lng"]);
-      southwest_lat = encodeURI(response["southwest_lat"]);
-      southwest_lng = encodeURI(response["southwest_lng"]);
-      //console.log("google response");
-      //console.log(response);
-      
-    }
-    
-    console.log("northeast_lat",northeast_lat)
-    console.log("northeast_lng",northeast_lng)
-    console.log("southwest_lat",southwest_lat)
-    console.log("southwest_lng",southwest_lng)
-    
-    if (
-      (northeast_lat === "" || northeast_lng === "" || southwest_lat === "" || southwest_lng === "") || 
-      (northeast_lat === NaN || northeast_lng === NaN || southwest_lat === NaN || southwest_lng === NaN)
-    ) {
-      const error_msg = `Google Maps did not return results for address: ${coded_address}.`;
-      return res.json({ "error":  error_msg});
-    }
-      
-      const distance = req.query.distance;
-      //console.log("southwest_lng",distance)
-      const fires = await getNasaData(southwest_lng,southwest_lat,northeast_lng,northeast_lat,distance);
-      //return_data = await response.text();
-      console.log("fires", fires);
-      
-      
-    
-    return res.json({ fires, "error" : "" });
-  } catch (error) {
+    return res.json(result);
+  } catch (err) {
+    console.error(err);
     return res.status(500).json({ error: "Failed to retrieve bounds" });
   }
+
 })
 
 app.listen(port, () => console.log("Server running on port 8080"))

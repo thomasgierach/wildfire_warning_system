@@ -1,0 +1,12 @@
+{
+    results: [
+      {
+        address_components: [Array],
+        formatted_address: 'Union, MS 39365, USA',
+        geometry: [Object],
+        place_id: 'ChIJXdaAage9g4gR-9MiHjv72rg',
+        types: [Array]
+      }
+    ],
+    status: 'OK'
+  }

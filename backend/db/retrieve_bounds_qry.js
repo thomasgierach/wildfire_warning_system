@@ -1,4 +1,4 @@
-export async function retrieveBounds(pool, search_term, google_address) {
+export async function retrieveBounds(pool, search_term) {
     console.log("In retrieveBounds");
     try {
       let query = "SELECT * FROM maps_lookup WHERE 0=0 AND search_term = $1;";
