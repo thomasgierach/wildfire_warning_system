@@ -1,8 +1,8 @@
 import { saveBounds, saveBadAddress } from '../db/insert_bounds.js';
 import fetch from 'node-fetch';
 
-export async function googleBounds(pool, coded_address, apiKey) {
-    console.log("In googleBounds");
+export async function googleBounds(pool, coded_address, apiKey, saveToDB = true) {
+    //console.log("In googleBounds");
     //console.log("coded_address:", coded_address);
     let northeast_lat = "";
     let northeast_lng = "";
@@ -16,9 +16,11 @@ export async function googleBounds(pool, coded_address, apiKey) {
         
         let northeast;
         let southwest;
-        console.log("Google Data");
-        console.log(data);
+        //console.log("Google Data");
+        //console.log(data);
         if (data.results.length > 0) {
+            //console.log("data.results[0].geometry", data.results[0].geometry);
+            //console.log("data.results[0].geometry.bounds", data.results[0].geometry.bounds);
             try {
                 northeast = data.results[0].geometry.bounds.northeast;
                 southwest = data.results[0].geometry.bounds.southwest;
@@ -30,7 +32,9 @@ export async function googleBounds(pool, coded_address, apiKey) {
             northeast_lng = northeast.lng;
             southwest_lat = southwest.lat;
             southwest_lng = southwest.lng;
-            await saveBounds(pool, decodeURI(coded_address), data.results[0].formatted_address, northeast_lat, northeast_lng, southwest_lat, southwest_lng);
+            if (saveToDB) {
+                await saveBounds(pool, decodeURI(coded_address), data.results[0].formatted_address, northeast_lat, northeast_lng, southwest_lat, southwest_lng);
+            }
         } else {
             await saveBadAddress(pool, decodeURI(coded_address));
             throw new Error("No results found.");
@@ -39,6 +43,7 @@ export async function googleBounds(pool, coded_address, apiKey) {
         console.error("Error:", error);
     }
     console.log("returning data");
+    
     return {
         northeast_lat,
         northeast_lng,

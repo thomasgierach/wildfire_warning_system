@@ -1,12 +1,23 @@
 {
-    results: [
+    "results": [
       {
-        address_components: [Array],
-        formatted_address: 'Union, MS 39365, USA',
-        geometry: [Object],
-        place_id: 'ChIJXdaAage9g4gR-9MiHjv72rg',
-        types: [Array]
+        "address_components": "",
+        "formatted_address": "Preston, MS",
+        "geometry": {
+                      "bounds": {
+                        "northeast": { "lat": 32.9422945, "lng": -88.8450944 },
+                        "southwest": { "lat": 32.9330313, "lng": -88.8512506 }
+                      },
+                      "location": { "lat": 32.9377816, "lng": -88.8485034 },
+                      "location_type": "APPROXIMATE",
+                      "viewport": {
+                        "northeast": { "lat": 32.9422945, "lng": -88.8450944 },
+                        "southwest": { "lat": 32.9330313, "lng": -88.8512506 }
+                      }
+                    },
+        "place_id": "ChIJawwM0nn3g4gRNn9CPaznV1c",
+        "types": ""
       }
     ],
-    status: 'OK'
+    "status": "OK"
   }

@@ -35,11 +35,13 @@ export async function get_wildfire_data(pool, coded_address, distance, google_ap
           
         }
         
+        /*
         console.log("northeast_lat",northeast_lat)
         console.log("northeast_lng",northeast_lng)
         console.log("southwest_lat",southwest_lat)
         console.log("southwest_lng",southwest_lng)
-        
+        */
+       
         if (
           (northeast_lat === "" || northeast_lng === "" || southwest_lat === "" || southwest_lng === "") || 
           (Number.isNaN(Number(northeast_lat)) || Number.isNaN(Number(northeast_lng)) || Number.isNaN(Number(southwest_lat)) || Number.isNaN(Number(southwest_lng)) )
@@ -50,7 +52,7 @@ export async function get_wildfire_data(pool, coded_address, distance, google_ap
         //console.log("southwest_lng",distance)
         const fires = await getNasaData(southwest_lng,southwest_lat,northeast_lng,northeast_lat,distance, nasa_api_key);
         //return_data = await response.text();
-        console.log("fires", fires);   
+        //console.log("fires", fires);   
         
         return { fires, "error" : "" };
 }

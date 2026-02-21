@@ -54,22 +54,7 @@ app.get('/cors', (req, res) => {
   res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
   res.send({ "msg": "This has CORS enabled" });
 })
-/*
-app.post("/api/save-bounds", async (req, res) => {
-  console.log("In app.post");
-  try {
-    const { url_var, google_address, northeast_lat, northeast_lng, southwest_lat, southwest_lng } = req.body;
-    if (checkResult.rows.length === 0) {
-      console.log("It didn't exist. Adding.");
-      await saveBounds(pool, url_var, google_address, northeast_lat, northeast_lng, southwest_lat, southwest_lng);
-      res.json({ message: "Bounds saved successfully!" });
-    }
-    
-  } catch (error) {
-    res.status(500).json({ error: "Failed to save bounds" });
-  }
-})
-*/
+
 app.get("/api/get-existing-bounds", async (req, res) => {
   try {
     const result = await get_wildfire_data(

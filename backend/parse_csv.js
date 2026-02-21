@@ -1,4 +1,7 @@
 export function parseCSV(csv) {
+    if (!csv.trim()) {
+      return [];
+    }
     const [headerLine, ...rows] = csv.trim().split('\n');
     const headers = headerLine.split(',');
   
