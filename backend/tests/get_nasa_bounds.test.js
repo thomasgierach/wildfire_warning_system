@@ -1,5 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { parseCSV } from "../parse_csv.js";  
+import { getNasaData } from "../services/get_nasa_bounds.js";
+
 
 global.fetch = vi.fn();
 
@@ -19,4 +21,28 @@ describe("parseCSV", () => {
         { lat: "36.6", lng: "-119.8" },
         ]);
     });
+});
+
+describe("getNasaData", () => {
+    it("returns an empty array when no fires are found", async () => {
+        fetch.mockResolvedValueOnce({
+            text: async () => "lat,lng\n" // CSV with only headers, no data
+        });
+        
+        const result = await getNasaData("0", "0", "1", "1", 1, "fake-api-key", fetch);
+        expect(result).toEqual([]);
     });
+    
+    it("returns fire data when fires are found", async () => {
+        const csvData = "latitude,longitude\n32.2863,-89.7225";
+        fetch.mockResolvedValueOnce({
+            text: async () => csvData
+        });
+        
+        const result = await getNasaData("0", "0", "1", "1", 1, "fake-api-key", fetch);
+        console.log("result", result);
+        expect(result).toEqual([
+            { latitude: "32.2863", longitude: "-89.7225" },
+        ]);
+    });
+});

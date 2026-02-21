@@ -4,12 +4,13 @@ import { retrieveBounds } from "../db/retrieve_bounds_qry.js";
 import { googleBounds } from "./google_bounds.js";
 // Calls Nasa Wildfire Satellite API
 import { getNasaData } from "./get_nasa_bounds.js";
+import fetch from 'node-fetch';
 
 
 export async function get_wildfire_data(pool, coded_address, distance, google_api_key, nasa_api_key) {
         
         const checkResult = await retrieveBounds(pool, coded_address);
-        console.log(checkResult);
+        //console.log(checkResult);
         let northeast_lat = "";
         let northeast_lng = "";
         let southwest_lat = "";
@@ -25,7 +26,7 @@ export async function get_wildfire_data(pool, coded_address, distance, google_ap
         } else {
           console.log("Googling Address to Coordinates");
           
-          let response = await googleBounds(pool, coded_address, google_api_key);
+          let response = await googleBounds(pool, coded_address, google_api_key, fetch);
           northeast_lat = encodeURI(response["northeast_lat"]);
           northeast_lng = encodeURI(response["northeast_lng"]);
           southwest_lat = encodeURI(response["southwest_lat"]);
@@ -50,7 +51,7 @@ export async function get_wildfire_data(pool, coded_address, distance, google_ap
           return { "error":  error_msg};
         }
         //console.log("southwest_lng",distance)
-        const fires = await getNasaData(southwest_lng,southwest_lat,northeast_lng,northeast_lat,distance, nasa_api_key);
+        const fires = await getNasaData(southwest_lng,southwest_lat,northeast_lng,northeast_lat,distance, nasa_api_key, fetch);
         //return_data = await response.text();
         //console.log("fires", fires);   
         

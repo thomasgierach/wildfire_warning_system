@@ -1,10 +1,9 @@
-import fetch from 'node-fetch';
 import { parseCSV } from '../parse_csv.js';
 import { sources } from '../constants.js';
 
 
 
-export async function getNasaData(southwest_lng,southwest_lat,northeast_lng,northeast_lat,distance, nasa_api_key) {
+export async function getNasaData(southwest_lng,southwest_lat,northeast_lng,northeast_lat,distance, nasa_api_key, fetchFN) {
     console.log("getNasaData");
     //console.log(southwest_lng + ',' + southwest_lat + ',' + northeast_lng + ',' + northeast_lat);
     //approximate mile to degree comparison
@@ -32,7 +31,7 @@ export async function getNasaData(southwest_lng,southwest_lat,northeast_lng,nort
     let fires;
     for (let i = 0; i < sources.length; i++) {
       nasa_url = `https://firms.modaps.eosdis.nasa.gov/usfs/api/area/csv/${nasa_api_key}/${sources[i]}/${encodedAreaStr}/1/${today}`;
-      response = await fetch(nasa_url);
+      response = await fetchFN(nasa_url);
       data = await response.text();
       console.log(data);
       fires = parseCSV(data);
