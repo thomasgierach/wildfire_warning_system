@@ -3,6 +3,7 @@ import { saveBounds, saveBadAddress } from '../db/insert_bounds.js';
 export async function googleBounds(pool, coded_address, apiKey, fetchFN, saveToDB = true) {
     //console.log("In googleBounds");
     //console.log("coded_address:", coded_address);
+    //console.log("fetchFN", fetchFN);
     let northeast_lat = "";
     let northeast_lng = "";
     let southwest_lat = "";
@@ -16,7 +17,7 @@ export async function googleBounds(pool, coded_address, apiKey, fetchFN, saveToD
         let northeast;
         let southwest;
         //console.log("Google Data");
-        //console.log(data);
+        //console.log("data", data);
         if (data.results.length > 0) {
             //console.log("data.results[0].geometry", data.results[0].geometry);
             //console.log("data.results[0].geometry.bounds", data.results[0].geometry.bounds);

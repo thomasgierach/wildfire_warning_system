@@ -6,10 +6,10 @@ import { backend_addr } from "./constants";
 /**
  * API helper — NOT a React function
  */
-async function alreadyInsertedCheck(coded_address, distance) {
+export async function alreadyInsertedCheck(coded_address, distance, fetchFn = fetch) {
   const bounds_attr = `coded_address=${encodeURIComponent(coded_address)}&distance=${encodeURIComponent(distance)}`;
 
-  const response = await fetch(
+  const response = await fetchFn(
     `${backend_addr}get-existing-bounds?${bounds_attr}`
   );
 
@@ -32,7 +32,7 @@ async function runSearch(address_qry, distance) {
     address_qry,
     distance
   );
-  console.log(result);
+  //console.log(result);
   // Handle backend / Google error
   if (result.error) {
     return {
